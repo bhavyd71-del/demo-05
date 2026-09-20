@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APEX Salon & Spa | Pro Stylist Hub & Luxury Booking Architecture</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandGold: '#D4AF37',
+            brandGoldLight: '#F5DE87',
+            brandGoldDark: '#996515',
+            darkBg: '#070708',
+            surfaceBg: '#0F0F12',
+            surfaceCard: '#15151A',
+            surfaceBorder: '#23232C',
+          },
+          fontFamily: {
+            cinzel: ['Cinzel', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #FDE68A, #D4AF37, #B45309);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-border {
+      border: 1px solid rgba(212, 175, 55, 0.24);
+    }
+    
+    /* Before / After Slider */
+    .ba-container {
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+    .ba-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      overflow: hidden;
+      width: 50%;
+    }
+    .ba-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: #D4AF37;
+      cursor: ew-resize;
+      transform: translateX(-50%);
+    }
+    .ba-handle-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #D4AF37;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.7);
+      font-size: 13px;
+    }
+
+    /* Booking Engine States */
+    .service-card.selected,
+    .stylist-card.selected {
+      border-color: #D4AF37 !important;
+      background-color: #1F1D15 !important;
+      box-shadow: 0 0 18px rgba(212, 175, 55, 0.2);
+    }
+    .slot-pill.selected,
+    .date-pill.selected {
+      background-color: #D4AF37 !important;
+      color: #000 !important;
+      border-color: #D4AF37 !important;
+      font-weight: 700 !important;
+      box-shadow: 0 0 14px rgba(212, 175, 55, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-darkBg text-gray-200 font-sans antialiased selection:bg-brandGold selection:text-black">
+
+  <!-- TOP CONCIERGE BAR -->
+  <div class="bg-surfaceBg text-gray-400 text-xs py-2.5 px-6 border-b border-white/5">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-5">
+        <span><i class="fa-solid fa-phone text-brandGold mr-1.5"></i> +91 98765 43210</span>
+        <span class="hidden md:inline"><i class="fa-solid fa-location-dot text-brandGold mr-1.5"></i> Prime Circle, Ring Road, Rajkot</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-1.5 text-emerald-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Master Stylist Rosters Active
+        </span>
+        <span class="text-gray-600">|</span>
+        <span class="text-brandGold">Tue - Sun: 9 AM - 9 PM</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 bg-darkBg/95 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2">
+        <span class="text-2xl sm:text-3xl font-bold font-cinzel tracking-widest gold-gradient-text">APEX</span>
+        <span class="text-[11px] uppercase tracking-widest text-gray-400 pl-2 border-l border-brandGold/40 font-medium">Salon & Spa</span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-7 text-sm font-medium">
+        <a href="#home" class="hover:text-brandGold transition-colors">Home</a>
+        <a href="#about" class="hover:text-brandGold transition-colors">Our Story</a>
+        <a href="#services" class="hover:text-brandGold transition-colors">Services</a>
+        <a href="#stylists" class="hover:text-brandGold transition-colors">Master Artists</a>
+        <a href="#transformation" class="hover:text-brandGold transition-colors">Transformations</a>
+        <a href="#gallery" class="hover:text-brandGold transition-colors">Lookbook</a>
+        <a href="#testimonials" class="hover:text-brandGold transition-colors">Reviews</a>
+        <a href="#scheduler" class="text-brandGold transition-colors flex items-center gap-1 font-semibold">
+          <i class="fa-regular fa-calendar-check"></i> Book Stylist
+        </a>
+      </nav>
+
+      <a href="#scheduler" class="bg-brandGold hover:bg-brandGoldDark text-black text-xs md:text-sm font-bold py-2.5 px-6 rounded-full transition-all duration-300 shadow-lg shadow-brandGold/15 flex items-center gap-2">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>Book Stylist</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- 1. HERO SECTION -->
+  <section id="home" class="relative min-h-[90vh] flex items-center justify-center text-center px-5 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/80 to-transparent z-10"></div>
+    <div class="absolute inset-0 bg-cover bg-center opacity-30 filter grayscale" style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1800&q=80');"></div>
+
+    <div class="relative z-20 max-w-4xl mx-auto py-20">
+      <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-brandGold/10 border border-brandGold/30 text-brandGold text-xs font-semibold uppercase tracking-widest mb-6">
+        <i class="fa-solid fa-crown text-xs"></i>
+        Dedicated Master Stylists &bull; Seamless Appointment Hub
+      </div>
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-cinzel font-bold tracking-tight text-white leading-tight mb-6">
+        Where Modern Elegance <br>
+        <span class="gold-gradient-text">Meets Precision</span>
+      </h1>
+      <p class="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+        Choose your bespoke treatment, hand-select your dedicated stylist, and experience couture grooming crafted exclusively around your calendar.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#scheduler" class="w-full sm:w-auto bg-brandGold hover:bg-brandGoldDark text-black font-bold px-8 py-3.5 rounded-lg transition-all text-sm shadow-xl shadow-brandGold/15">
+          Reserve With A Stylist
+        </a>
+        <a href="#stylists" class="w-full sm:w-auto gold-border hover:bg-white/5 text-gray-200 font-semibold px-8 py-3.5 rounded-lg transition-all text-sm">
+          Meet Creative Team
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. QUICK STATS & HIGHLIGHTS -->
+  <section class="border-y border-white/10 bg-surfaceBg/50 py-8 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="text-2xl sm:text-3xl font-cinzel font-bold text-brandGold">12,000+</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Groomed Patrons</p>
+      </div>
+      <div>
+        <p class="text-2xl sm:text-3xl font-cinzel font-bold text-brandGold">15+</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Creative Directors</p>
+      </div>
+      <div>
+        <p class="text-2xl sm:text-3xl font-cinzel font-bold text-brandGold">100%</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Cruelty-Free Luxury</p>
+      </div>
+      <div>
+        <p class="text-2xl sm:text-3xl font-cinzel font-bold text-brandGold">4.9 / 5.0</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Google Verified</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ABOUT / PHILOSOPHY -->
+  <section id="about" class="py-24 px-6 border-b border-white/5 bg-surfaceBg/30">
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+      <div class="relative">
+        <div class="rounded-2xl overflow-hidden gold-border aspect-[4/3] shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1000&q=80" alt="Salon Interior" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute -bottom-6 -right-6 bg-surfaceCard p-5 rounded-xl border border-brandGold/30 shadow-xl hidden sm:block">
+          <p class="text-3xl font-cinzel font-bold text-brandGold">12+ Years</p>
+          <p class="text-xs text-gray-400 uppercase tracking-wider">Of Salon Mastery</p>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">The APEX Philosophy</span>
+        <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2 mb-6">Bespoke Aesthetics Designed For You</h2>
+        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+          Founded on the principle of uncompromised craftsmanship, APEX Salon & Spa combines world-class styling methodologies with organic botanical luxury. Every cut, color transition, and dermal treatment is customized to reflect your lifestyle.
+        </p>
+        
+        <div class="grid grid-cols-2 gap-6 pt-4 border-t border-white/10">
+          <div>
+            <h4 class="font-cinzel text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-check text-brandGold text-sm"></i> Master Directors
+            </h4>
+            <p class="text-xs text-gray-400 mt-1">Trained by international academies across Europe.</p>
+          </div>
+          <div>
+            <h4 class="font-cinzel text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-check text-brandGold text-sm"></i> Clean Chemistry
+            </h4>
+            <p class="text-xs text-gray-400 mt-1">Sulphate-free, non-toxic & cruelty-free care.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. SERVICES OVERVIEW MENU -->
+  <section id="services" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Our Portfolio</span>
+      <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Curated Salon Services</h2>
+      <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4"></div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-surfaceCard p-7 rounded-xl gold-border hover:border-brandGold/60 transition-all duration-300 group">
+        <div class="w-12 h-12 rounded-lg bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
+          <i class="fa-solid fa-scissors"></i>
+        </div>
+        <h3 class="text-xl font-cinzel font-bold text-white mb-2">Couture Hair Architecture</h3>
+        <p class="text-gray-400 text-xs leading-relaxed mb-6">Personalized structural haircuts, texture sculpting, and blowout styling crafted to highlight your geometry.</p>
+        <div class="space-y-3 border-t border-white/10 pt-4 text-xs">
+          <div class="flex justify-between text-gray-300">
+            <span>Director's Cut & Style</span>
+            <span class="text-brandGold font-semibold">₹650</span>
+          </div>
+          <div class="flex justify-between text-gray-300">
+            <span>Balayage & Global Color</span>
+            <span class="text-brandGold font-semibold">₹3,499+</span>
+          </div>
+          <div class="flex justify-between text-gray-300">
+            <span>Nanoplastia Smoothing</span>
+            <span class="text-brandGold font-semibold">₹4,999+</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surfaceCard p-7 rounded-xl gold-border hover:border-brandGold/60 transition-all duration-300 group">
+        <div class="w-12 h-12 rounded-lg bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
+          <i class="fa-solid fa-sparkles"></i>
+        </div>
+        <h3 class="text-xl font-cinzel font-bold text-white mb-2">Dermal & Facial Alchemy</h3>
+        <p class="text-gray-400 text-xs leading-relaxed mb-6">Medical-grade glow facials, lymphatic drainage treatments, and multi-peptide hydration regimens.</p>
+        <div class="space-y-3 border-t border-white/10 pt-4 text-xs">
+          <div class="flex justify-between text-gray-300">
+            <span>Hydra-Dermabrasion Infusion</span>
+            <span class="text-brandGold font-semibold">₹2,200</span>
+          </div>
+          <div class="flex justify-between text-gray-300">
+            <span>Gold Collagen Stem-Cell Ritual</span>
+            <span class="text-brandGold font-semibold">₹2,800</span>
+          </div>
+          <div class="flex justify-between text-gray-300">
+            <span>Deep Pore Clarifying Cleanse</span>
+            <span class="text-brandGold font-semibold">₹950</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surfaceCard p-7 rounded-xl gold-border hover:border-brandGold/60 transition-all duration-300 group">
+        <div class="w-12 h-12 rounded-lg bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
+          <i class="fa-solid fa-crown"></i>
+        </div>
+        <h3 class="text-xl font-cinzel font-bold text-white mb-2">Bridal & Celebrations</h3>
+        <p class="text-gray-400 text-xs leading-relaxed mb-6">Complete bridal party aesthetics, HD airbrush artistry, and bespoke groom grooming packages.</p>
+        <div class="space-y-3 border-t border-white/10 pt-4 text-xs">
+          <div class="flex justify-between text-gray-300">
+            <span>HD Celebrity Bridal Makeup</span>
+            <span class="text-brandGold font-semibold">₹14,999</span>
+          </div>
+          <div class="flex justify-between text-gray-300">
+            <span>Royal Groom Makeover Package</span>
+            <span class="text-brandGold font-semibold">₹5,499</span>
+          </div>
+          <div class="flex justify-between text-gray-300">
+            <span>Pre-Wedding Skin Revamp</span>
+            <span class="text-brandGold font-semibold">₹7,999</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. NEW: PRO STYLIST TEAM SHOWCASE (THE ₹50,000 HIGHLIGHT) -->
+  <section id="stylists" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Artistic Directors</span>
+      <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Meet Our Master Stylists</h2>
+      <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-4"></div>
+      <p class="text-gray-400 text-xs sm:text-sm">World-class artisans with specialized mastery in hair architecture, color chemistry, and dermal rejuvenation.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Stylist 1 -->
+      <div class="bg-surfaceCard rounded-2xl overflow-hidden gold-border group hover:border-brandGold transition-all duration-300">
+        <div class="aspect-[3/4] overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80" alt="Aryan Mehta" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <span class="absolute top-3 right-3 bg-black/80 text-brandGold text-[11px] font-bold px-2.5 py-1 rounded-full border border-brandGold/40 flex items-center gap-1">
+            <i class="fa-solid fa-star text-[10px]"></i> 4.9
+          </span>
+        </div>
+        <div class="p-5">
+          <h3 class="font-cinzel text-lg font-bold text-white">Aryan Mehta</h3>
+          <p class="text-brandGold text-xs font-medium mb-2">Creative Hair Director</p>
+          <p class="text-gray-400 text-xs leading-relaxed mb-4">10+ years experience. Specialist in precision fades, textured couture cuts, and European balayage.</p>
+          <a href="#scheduler" onclick="quickSelectStylist('Aryan Mehta')" class="block text-center w-full py-2 rounded-lg bg-surfaceBg border border-white/10 hover:border-brandGold hover:text-brandGold text-xs font-semibold transition-all">
+            Book With Aryan
+          </a>
+        </div>
+      </div>
+
+      <!-- Stylist 2 -->
+      <div class="bg-surfaceCard rounded-2xl overflow-hidden gold-border group hover:border-brandGold transition-all duration-300">
+        <div class="aspect-[3/4] overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=700&q=80" alt="Maya Patel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <span class="absolute top-3 right-3 bg-black/80 text-brandGold text-[11px] font-bold px-2.5 py-1 rounded-full border border-brandGold/40 flex items-center gap-1">
+            <i class="fa-solid fa-star text-[10px]"></i> 5.0
+          </span>
+        </div>
+        <div class="p-5">
+          <h3 class="font-cinzel text-lg font-bold text-white">Maya Patel</h3>
+          <p class="text-brandGold text-xs font-medium mb-2">Senior Chromatic Specialist</p>
+          <p class="text-gray-400 text-xs leading-relaxed mb-4">Toni&Guy certified. Master in dimensional ombre, pastel tones, and corrective color alchemy.</p>
+          <a href="#scheduler" onclick="quickSelectStylist('Maya Patel')" class="block text-center w-full py-2 rounded-lg bg-surfaceBg border border-white/10 hover:border-brandGold hover:text-brandGold text-xs font-semibold transition-all">
+            Book With Maya
+          </a>
+        </div>
+      </div>
+
+      <!-- Stylist 3 -->
+      <div class="bg-surfaceCard rounded-2xl overflow-hidden gold-border group hover:border-brandGold transition-all duration-300">
+        <div class="aspect-[3/4] overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=80" alt="Kabir Verma" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <span class="absolute top-3 right-3 bg-black/80 text-brandGold text-[11px] font-bold px-2.5 py-1 rounded-full border border-brandGold/40 flex items-center gap-1">
+            <i class="fa-solid fa-star text-[10px]"></i> 4.9
+          </span>
+        </div>
+        <div class="p-5">
+          <h3 class="font-cinzel text-lg font-bold text-white">Kabir Verma</h3>
+          <p class="text-brandGold text-xs font-medium mb-2">Beard Sculptor & Spa Master</p>
+          <p class="text-gray-400 text-xs leading-relaxed mb-4">Royal bespoke grooming expert. Specializes in luxury hot-towel shaves and scalp massages.</p>
+          <a href="#scheduler" onclick="quickSelectStylist('Kabir Verma')" class="block text-center w-full py-2 rounded-lg bg-surfaceBg border border-white/10 hover:border-brandGold hover:text-brandGold text-xs font-semibold transition-all">
+            Book With Kabir
+          </a>
+        </div>
+      </div>
+
+      <!-- Stylist 4 -->
+      <div class="bg-surfaceCard rounded-2xl overflow-hidden gold-border group hover:border-brandGold transition-all duration-300">
+        <div class="aspect-[3/4] overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=700&q=80" alt="Dr. Alisha Roy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <span class="absolute top-3 right-3 bg-black/80 text-brandGold text-[11px] font-bold px-2.5 py-1 rounded-full border border-brandGold/40 flex items-center gap-1">
+            <i class="fa-solid fa-star text-[10px]"></i> 5.0
+          </span>
+        </div>
+        <div class="p-5">
+          <h3 class="font-cinzel text-lg font-bold text-white">Dr. Alisha Roy</h3>
+          <p class="text-brandGold text-xs font-medium mb-2">Aesthetic Dermal Consultant</p>
+          <p class="text-gray-400 text-xs leading-relaxed mb-4">Dermatology aesthetician. Expert in non-invasive hydra infusions and anti-aging therapies.</p>
+          <a href="#scheduler" onclick="quickSelectStylist('Dr. Alisha Roy')" class="block text-center w-full py-2 rounded-lg bg-surfaceBg border border-white/10 hover:border-brandGold hover:text-brandGold text-xs font-semibold transition-all">
+            Book With Alisha
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. BEFORE / AFTER INTERACTIVE SLIDER -->
+  <section id="transformation" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Real Results</span>
+      <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Interactive Transformation Showcase</h2>
+      <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-4"></div>
+      <p class="text-gray-400 text-xs sm:text-sm">Drag the gold handle horizontally to examine our signature transformation results.</p>
+    </div>
+
+    <div class="max-w-3xl mx-auto">
+      <div id="baSlider" class="ba-container rounded-2xl gold-border shadow-2xl h-[380px] sm:h-[460px]">
+        <img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=1200&q=80" alt="After" class="absolute inset-0 w-full h-full object-cover">
+        <span class="absolute top-4 right-4 z-10 bg-black/75 text-brandGold text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-brandGold/40">After APEX</span>
+
+        <div id="baOverlay" class="ba-overlay">
+          <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1200&q=80" alt="Before" class="absolute top-0 left-0 max-w-none h-full w-[1000px] object-cover filter grayscale contrast-125">
+          <span class="absolute top-4 left-4 z-10 bg-black/75 text-gray-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-white/20">Before</span>
+        </div>
+
+        <div id="baHandle" class="ba-handle">
+          <div class="ba-handle-button">
+            <i class="fa-solid fa-arrows-left-right"></i>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-xs text-gray-500 mt-4"><i class="fa-solid fa-hand-pointer text-brandGold mr-1"></i> Click & drag anywhere to compare</p>
+    </div>
+  </section>
+
+  <!-- 7. SMART CALENDAR & STYLIST SCHEDULER (THE ₹50,000 ENHANCED ENGINE) -->
+  <section id="scheduler" class="py-24 px-6 max-w-6xl mx-auto border-b border-white/5">
+    <div class="text-center mb-14">
+      <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Pro Reservation Engine</span>
+      <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Book Your Appointment In 4 Steps</h2>
+      <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-4"></div>
+      <p class="text-gray-400 text-xs sm:text-sm">Hand-select your preferred stylist, service, and custom time slot.</p>
+    </div>
+
+    <div class="bg-surfaceCard rounded-2xl gold-border shadow-2xl p-6 sm:p-10">
+
+      <!-- STEP 1: CHOOSE STYLIST (NEW IN ₹50K) -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="w-7 h-7 rounded-full bg-brandGold text-black font-bold text-xs flex items-center justify-center">1</span>
+          <h3 class="text-lg font-cinzel font-bold text-white">Select Your Master Stylist</h3>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="stylistSelectorGrid">
+          <div onclick="selectStylist(this, 'Aryan Mehta', 'Hair Director')" class="stylist-card selected cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-xl p-3.5 text-center transition-all">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 rounded-full mx-auto object-cover border-2 border-brandGold/40 mb-2">
+            <h4 class="font-bold text-xs sm:text-sm text-white">Aryan Mehta</h4>
+            <span class="text-[10px] text-brandGold block">Hair Director</span>
+          </div>
+
+          <div onclick="selectStylist(this, 'Maya Patel', 'Color Specialist')" class="stylist-card cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-xl p-3.5 text-center transition-all">
+            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 rounded-full mx-auto object-cover border-2 border-brandGold/40 mb-2">
+            <h4 class="font-bold text-xs sm:text-sm text-white">Maya Patel</h4>
+            <span class="text-[10px] text-brandGold block">Color Specialist</span>
+          </div>
+
+          <div onclick="selectStylist(this, 'Kabir Verma', 'Beard & Spa')" class="stylist-card cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-xl p-3.5 text-center transition-all">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 rounded-full mx-auto object-cover border-2 border-brandGold/40 mb-2">
+            <h4 class="font-bold text-xs sm:text-sm text-white">Kabir Verma</h4>
+            <span class="text-[10px] text-brandGold block">Beard & Spa</span>
+          </div>
+
+          <div onclick="selectStylist(this, 'Dr. Alisha Roy', 'Skin Aesthetician')" class="stylist-card cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-xl p-3.5 text-center transition-all">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 rounded-full mx-auto object-cover border-2 border-brandGold/40 mb-2">
+            <h4 class="font-bold text-xs sm:text-sm text-white">Dr. Alisha</h4>
+            <span class="text-[10px] text-brandGold block">Skin Aesthetician</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: SELECT SERVICE -->
+      <div class="mb-10 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="w-7 h-7 rounded-full bg-brandGold text-black font-bold text-xs flex items-center justify-center">2</span>
+          <h3 class="text-lg font-cinzel font-bold text-white">Select Service Package</h3>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div onclick="selectService(this, 'Signature Haircut & Style', '₹450', '45 min')" class="service-card selected cursor-pointer bg-surfaceBg border border-surfaceBorder hover:border-brandGold/50 rounded-xl p-4 transition-all">
+            <div class="flex justify-between items-start mb-2">
+              <i class="fa-solid fa-scissors text-brandGold text-lg"></i>
+              <span class="text-xs bg-brandGold/10 text-brandGold px-2 py-0.5 rounded font-semibold">45 min</span>
+            </div>
+            <h4 class="font-semibold text-sm text-white">Signature Haircut</h4>
+            <p class="text-[11px] text-gray-400 mt-1">Wash, consultation & styling</p>
+            <p class="text-sm font-bold text-brandGold mt-3">₹450</p>
+          </div>
+
+          <div onclick="selectService(this, 'Royal Beard Sculpt & Spa', '₹350', '30 min')" class="service-card cursor-pointer bg-surfaceBg border border-surfaceBorder hover:border-brandGold/50 rounded-xl p-4 transition-all">
+            <div class="flex justify-between items-start mb-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-brandGold text-lg"></i>
+              <span class="text-xs bg-brandGold/10 text-brandGold px-2 py-0.5 rounded font-semibold">30 min</span>
+            </div>
+            <h4 class="font-semibold text-sm text-white">Royal Beard Sculpt</h4>
+            <p class="text-[11px] text-gray-400 mt-1">Precision trim + hot towel</p>
+            <p class="text-sm font-bold text-brandGold mt-3">₹350</p>
+          </div>
+
+          <div onclick="selectService(this, 'Hydra-Glow Facial Therapy', '₹1,800', '60 min')" class="service-card cursor-pointer bg-surfaceBg border border-surfaceBorder hover:border-brandGold/50 rounded-xl p-4 transition-all">
+            <div class="flex justify-between items-start mb-2">
+              <i class="fa-solid fa-spa text-brandGold text-lg"></i>
+              <span class="text-xs bg-brandGold/10 text-brandGold px-2 py-0.5 rounded font-semibold">60 min</span>
+            </div>
+            <h4 class="font-semibold text-sm text-white">Hydra-Glow Facial</h4>
+            <p class="text-[11px] text-gray-400 mt-1">Deep pore suction & serum</p>
+            <p class="text-sm font-bold text-brandGold mt-3">₹1,800</p>
+          </div>
+
+          <div onclick="selectService(this, 'Balayage & Global Color', '₹3,499+', '120 min')" class="service-card cursor-pointer bg-surfaceBg border border-surfaceBorder hover:border-brandGold/50 rounded-xl p-4 transition-all">
+            <div class="flex justify-between items-start mb-2">
+              <i class="fa-solid fa-paintbrush text-brandGold text-lg"></i>
+              <span class="text-xs bg-brandGold/10 text-brandGold px-2 py-0.5 rounded font-semibold">120 min</span>
+            </div>
+            <h4 class="font-semibold text-sm text-white">Balayage & Color</h4>
+            <p class="text-[11px] text-gray-400 mt-1">Hand-painted chromatic shade</p>
+            <p class="text-sm font-bold text-brandGold mt-3">₹3,499+</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: SELECT DATE & TIME WINDOW -->
+      <div class="mb-10 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="w-7 h-7 rounded-full bg-brandGold text-black font-bold text-xs flex items-center justify-center">3</span>
+          <h3 class="text-lg font-cinzel font-bold text-white">Choose Date & Slot</h3>
+        </div>
+
+        <div class="mb-6">
+          <p class="text-xs text-gray-400 mb-3 font-medium">Select Day:</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+            <div onclick="selectDate(this, 'Today, Sep 20')" class="date-pill selected cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+              <span class="block text-[11px] text-gray-400">TODAY</span>
+              <span class="block text-sm font-bold mt-1">Sep 20</span>
+            </div>
+            <div onclick="selectDate(this, 'Mon, Sep 21')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+              <span class="block text-[11px] text-gray-400">MON</span>
+              <span class="block text-sm font-bold mt-1">Sep 21</span>
+            </div>
+            <div onclick="selectDate(this, 'Tue, Sep 22')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+              <span class="block text-[11px] text-gray-400">TUE</span>
+              <span class="block text-sm font-bold mt-1">Sep 22</span>
+            </div>
+            <div onclick="selectDate(this, 'Wed, Sep 23')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+              <span class="block text-[11px] text-gray-400">WED</span>
+              <span class="block text-sm font-bold mt-1">Sep 23</span>
+            </div>
+            <div onclick="selectDate(this, 'Thu, Sep 24')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+              <span class="block text-[11px] text-gray-400">THU</span>
+              <span class="block text-sm font-bold mt-1">Sep 24</span>
+            </div>
+            <div onclick="selectDate(this, 'Fri, Sep 25')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+              <span class="block text-[11px] text-gray-400">FRI</span>
+              <span class="block text-sm font-bold mt-1">Sep 25</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs text-gray-400 mb-3 font-medium">Select Time Slot:</p>
+          <div class="space-y-4">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-brandGold font-semibold block mb-2">Morning Slots</span>
+              <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+                <button onclick="selectSlot(this, '09:30 AM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">09:30 AM</button>
+                <button onclick="selectSlot(this, '10:15 AM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">10:15 AM</button>
+                <button onclick="selectSlot(this, '11:00 AM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">11:00 AM</button>
+                <button onclick="selectSlot(this, '11:45 AM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">11:45 AM</button>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-brandGold font-semibold block mb-2">Afternoon & Evening</span>
+              <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+                <button onclick="selectSlot(this, '02:00 PM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">02:00 PM</button>
+                <button onclick="selectSlot(this, '03:30 PM')" class="slot-pill selected bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">03:30 PM</button>
+                <button onclick="selectSlot(this, '05:00 PM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">05:00 PM</button>
+                <button onclick="selectSlot(this, '06:15 PM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">06:15 PM</button>
+                <button onclick="selectSlot(this, '07:30 PM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">07:30 PM</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: LIVE SUMMARY & ACTION -->
+      <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 bg-surfaceBg/60 p-6 rounded-xl">
+        <div class="space-y-1 text-center md:text-left">
+          <span class="text-xs uppercase tracking-wider text-gray-400">Appointment Overview:</span>
+          <p class="font-cinzel text-base sm:text-lg font-bold text-white">
+            <span id="summaryService" class="text-brandGold">Signature Haircut</span> with <span id="summaryStylist" class="text-brandGold">Aryan Mehta</span>
+          </p>
+          <p class="text-xs text-gray-400">
+            <span id="summaryDate">Today, Sep 20</span> at <span id="summarySlot">03:30 PM</span> &bull; 
+            Duration: <span id="summaryDuration">45 min</span> &bull; 
+            Fee: <span id="summaryPrice" class="text-white font-semibold">₹450</span>
+          </p>
+        </div>
+
+        <button onclick="openBookingModal()" class="w-full md:w-auto bg-brandGold hover:bg-brandGoldDark text-black font-bold px-8 py-3.5 rounded-lg text-sm transition-all duration-300 shadow-xl shadow-brandGold/20 flex items-center justify-center gap-2">
+          <span>Continue Reservation</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 8. LOOKBOOK / FILTERABLE GALLERY -->
+  <section id="gallery" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Lookbook</span>
+      <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Signature Masterpieces</h2>
+      <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-8"></div>
+
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <button onclick="filterGallery('all')" class="gallery-btn active bg-brandGold text-black font-semibold text-xs px-4 py-2 rounded-full transition-all">All Works</button>
+        <button onclick="filterGallery('hair')" class="gallery-btn bg-surfaceCard text-gray-300 hover:text-brandGold font-semibold text-xs px-4 py-2 rounded-full border border-white/10 transition-all">Hair & Styling</button>
+        <button onclick="filterGallery('skin')" class="gallery-btn bg-surfaceCard text-gray-300 hover:text-brandGold font-semibold text-xs px-4 py-2 rounded-full border border-white/10 transition-all">Skin & Glow</button>
+        <button onclick="filterGallery('bridal')" class="gallery-btn bg-surfaceCard text-gray-300 hover:text-brandGold font-semibold text-xs px-4 py-2 rounded-full border border-white/10 transition-all">Bridal</button>
+      </div>
+    </div>
+
+    <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="gallery-item hair rounded-xl overflow-hidden gold-border aspect-[3/4] relative group">
+        <img src="https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=700&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+          <p class="text-xs font-semibold text-white">Platinum Blonde Balayage</p>
+        </div>
+      </div>
+      <div class="gallery-item skin rounded-xl overflow-hidden gold-border aspect-[3/4] relative group">
+        <img src="https://images.unsplash.com/photo-1512290900672-1f55b9209a2d?auto=format&fit=crop&w=700&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+          <p class="text-xs font-semibold text-white">24K Radiance Dermal Care</p>
+        </div>
+      </div>
+      <div class="gallery-item bridal rounded-xl overflow-hidden gold-border aspect-[3/4] relative group">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+          <p class="text-xs font-semibold text-white">Imperial Bridal Look</p>
+        </div>
+      </div>
+      <div class="gallery-item hair rounded-xl overflow-hidden gold-border aspect-[3/4] relative group">
+        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+          <p class="text-xs font-semibold text-white">Gentleman Textured Crop</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. TESTIMONIALS & REVIEWS -->
+  <section id="testimonials" class="py-24 px-6 border-b border-white/5 bg-surfaceBg/40">
+    <div class="max-w-5xl mx-auto text-center">
+      <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Client Endorsements</span>
+      <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2 mb-14">Loved By Over 8,000+ Patrons</h2>
+
+      <div class="grid md:grid-cols-3 gap-6 text-left">
+        <div class="bg-surfaceCard p-6 rounded-xl gold-border">
+          <div class="text-brandGold flex gap-1 mb-3 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-gray-300 leading-relaxed mb-4">"Aryan Mehta completely changed my look. The haircut holds its shape effortlessly even after weeks. APEX is leagues ahead!"</p>
+          <p class="text-xs font-bold text-white">Pooja Dave</p>
+          <span class="text-[10px] text-gray-500">Client of Aryan Mehta</span>
+        </div>
+
+        <div class="bg-surfaceCard p-6 rounded-xl gold-border">
+          <div class="text-brandGold flex gap-1 mb-3 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-gray-300 leading-relaxed mb-4">"Maya's color sense is phenomenal. No brassiness, no damage—just clean platinum reflections. 10/10 recommendation."</p>
+          <p class="text-xs font-bold text-white">Harshil Mehta</p>
+          <span class="text-[10px] text-gray-500">Client of Maya Patel</span>
+        </div>
+
+        <div class="bg-surfaceCard p-6 rounded-xl gold-border">
+          <div class="text-brandGold flex gap-1 mb-3 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-gray-300 leading-relaxed mb-4">"Dr. Alisha's facial therapy made my skin feel renewed. Booking your specific aesthetician directly online is a gamechanger."</p>
+          <p class="text-xs font-bold text-white">Dr. Riddhi Shah</p>
+          <span class="text-[10px] text-gray-500">Client of Dr. Alisha</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. BOOKING MODAL POPUP -->
+  <div id="bookingModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-surfaceCard w-full max-w-lg rounded-2xl gold-border shadow-2xl p-6 sm:p-8 relative">
+      <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <span class="text-brandGold text-[11px] uppercase tracking-widest font-semibold">Priority Booking</span>
+        <h3 class="text-2xl font-cinzel font-bold text-white mt-1">Guest Confirmation</h3>
+        <p class="text-xs text-gray-400 mt-1">Lock your chosen stylist and time slot instantly.</p>
+      </div>
+
+      <div class="bg-surfaceBg p-4 rounded-xl border border-white/5 mb-6 text-xs text-gray-300 space-y-2">
+        <div class="flex justify-between">
+          <span class="text-gray-400">Assigned Stylist:</span>
+          <span id="modalStylist" class="font-semibold text-brandGold">Aryan Mehta</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Selected Service:</span>
+          <span id="modalService" class="font-semibold text-white">Signature Haircut</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Reserved Slot:</span>
+          <span id="modalSlot" class="font-semibold text-white">Today, Sep 20 @ 03:30 PM</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Service Fee:</span>
+          <span id="modalPrice" class="font-semibold text-white">₹450</span>
+        </div>
+      </div>
+
+      <form onsubmit="handleFinalBooking(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Your Full Name</label>
+          <input type="text" required placeholder="e.g. John Doe" class="w-full bg-darkBg border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Mobile Number (For WhatsApp / SMS Confirmation)</label>
+          <input type="tel" required placeholder="+91 98765 43210" class="w-full bg-darkBg border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+        </div>
+
+        <button type="submit" class="w-full bg-brandGold hover:bg-brandGoldDark text-black font-bold py-3.5 rounded-lg text-sm transition-all shadow-lg shadow-brandGold/15 mt-2">
+          Confirm Appointment Now
+        </button>
+      </form>
+
+      <!-- Success State -->
+      <div id="bookingSuccessBox" class="hidden absolute inset-0 bg-surfaceCard rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mb-4 border border-emerald-500/40">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h4 class="text-2xl font-cinzel font-bold text-white mb-2">Booking Confirmed!</h4>
+        <p class="text-xs text-gray-300 max-w-sm mb-6 leading-relaxed">
+          Your slot has been allocated to <span id="confirmedStylistName" class="text-brandGold font-semibold">Aryan Mehta</span>. A calendar invite has been sent to your phone.
+        </p>
+        <button onclick="closeBookingModal()" class="bg-surfaceBg border border-white/20 text-white hover:border-brandGold px-6 py-2.5 rounded-lg text-xs font-semibold">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. FOOTER -->
+  <footer id="contact" class="border-t border-white/10 bg-black/70 py-12 px-6">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 text-xs text-gray-500">
+      <div>
+        <p class="font-cinzel text-lg text-white font-bold mb-1">APEX SALON & SPA</p>
+        <p>The Standard of Luxury Haircare & Aesthetic Rejuvenation</p>
+      </div>
+      <div class="flex items-center gap-4 text-gray-400 text-sm">
+        <a href="#" class="hover:text-brandGold transition-colors"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="hover:text-brandGold transition-colors"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" class="hover:text-brandGold transition-colors"><i class="fa-brands fa-whatsapp"></i></a>
+      </div>
+      <p>&copy; 2026 APEX Salon. Demo Prototype (₹50,000 Pro Stylist Hub Tier).</p>
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="https://wa.me/919876543210?text=Hello%20APEX%20Salon,%20I%20want%20to%20reserve%20a%20stylist%20slot." target="_blank" class="fixed bottom-6 right-6 z-40 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300">
+    <i class="fa-brands fa-whatsapp text-2xl"></i>
+  </a>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // 1. Before & After Slider
+    const baSlider = document.getElementById('baSlider');
+    const baOverlay = document.getElementById('baOverlay');
+    const baHandle = document.getElementById('baHandle');
+    let isDragging = false;
+
+    function updateSlider(xPos) {
+      const rect = baSlider.getBoundingClientRect();
+      let offsetX = xPos - rect.left;
+      if (offsetX < 0) offsetX = 0;
+      if (offsetX > rect.width) offsetX = rect.width;
+      const percentage = (offsetX / rect.width) * 100;
+      baOverlay.style.width = percentage + '%';
+      baHandle.style.left = percentage + '%';
+    }
+
+    baSlider.addEventListener('mousedown', (e) => { isDragging = true; updateSlider(e.clientX); });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mousemove', (e) => { if (isDragging) updateSlider(e.clientX); });
+
+    baSlider.addEventListener('touchstart', (e) => { isDragging = true; updateSlider(e.touches[0].clientX); });
+    window.addEventListener('touchend', () => { isDragging = false; });
+    window.addEventListener('touchmove', (e) => { if (!isDragging) updateSlider(e.touches[0].clientX); });
+
+    // 2. Filterable Lookbook Gallery
+    function filterGallery(category) {
+      const items = document.querySelectorAll('.gallery-item');
+      const buttons = document.querySelectorAll('.gallery-btn');
+
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-brandGold', 'text-black');
+        btn.classList.add('bg-surfaceCard', 'text-gray-300');
+      });
+      event.target.classList.add('bg-brandGold', 'text-black');
+      event.target.classList.remove('bg-surfaceCard', 'text-gray-300');
+
+      items.forEach(item => {
+        item.style.display = (category === 'all' || item.classList.contains(category)) ? 'block' : 'none';
+      });
+    }
+
+    // 3. Pro Scheduler State & Logic
+    let state = {
+      stylist: 'Aryan Mehta',
+      service: 'Signature Haircut',
+      price: '₹450',
+      duration: '45 min',
+      date: 'Today, Sep 20',
+      slot: '03:30 PM'
+    };
+
+    function selectStylist(el, name, role) {
+      document.querySelectorAll('.stylist-card').forEach(card => card.classList.remove('selected'));
+      el.classList.add('selected');
+      state.stylist = name;
+      updateSummary();
+    }
+
+    function quickSelectStylist(name) {
+      state.stylist = name;
+      const cards = document.querySelectorAll('.stylist-card');
+      cards.forEach(card => {
+        if (card.innerText.includes(name.split(' ')[0])) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+      updateSummary();
+    }
+
+    function selectService(el, name, price, duration) {
+      document.querySelectorAll('.service-card').forEach(card => card.classList.remove('selected'));
+      el.classList.add('selected');
+      state.service = name;
+      state.price = price;
+      state.duration = duration;
+      updateSummary();
+    }
+
+    function selectDate(el, dateText) {
+      document.querySelectorAll('.date-pill').forEach(pill => pill.classList.remove('selected'));
+      el.classList.add('selected');
+      state.date = dateText;
+      updateSummary();
+    }
+
+    function selectSlot(el, slotText) {
+      document.querySelectorAll('.slot-pill').forEach(btn => btn.classList.remove('selected'));
+      el.classList.add('selected');
+      state.slot = slotText;
+      updateSummary();
+    }
+
+    function updateSummary() {
+      document.getElementById('summaryStylist').innerText = state.stylist;
+      document.getElementById('summaryService').innerText = state.service;
+      document.getElementById('summaryPrice').innerText = state.price;
+      document.getElementById('summaryDuration').innerText = state.duration;
+      document.getElementById('summaryDate').innerText = state.date;
+      document.getElementById('summarySlot').innerText = state.slot;
+    }
+
+    function openBookingModal() {
+      document.getElementById('modalStylist').innerText = state.stylist;
+      document.getElementById('modalService').innerText = state.service;
+      document.getElementById('modalSlot').innerText = `${state.date} @ ${state.slot}`;
+      document.getElementById('modalPrice').innerText = state.price;
+      document.getElementById('confirmedStylistName').innerText = state.stylist;
+      document.getElementById('bookingModal').classList.remove('hidden');
+      document.getElementById('bookingModal').classList.add('flex');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.add('hidden');
+      document.getElementById('bookingModal').classList.remove('flex');
+      document.getElementById('bookingSuccessBox').classList.add('hidden');
+    }
+
+    function handleFinalBooking(e) {
+      e.preventDefault();
+      document.getElementById('bookingSuccessBox').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
