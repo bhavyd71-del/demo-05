@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>APEX Salon & Spa | Pro Stylist Hub & Luxury Booking Architecture</title>
+  <title>APEX Salon & Spa | Scroll Motion Experience & Pro Hub</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,12 +18,11 @@
         extend: {
           colors: {
             brandGold: '#D4AF37',
-            brandGoldLight: '#F5DE87',
+            brandGoldLight: '#FBE89B',
             brandGoldDark: '#996515',
-            darkBg: '#070708',
-            surfaceBg: '#0F0F12',
-            surfaceCard: '#15151A',
-            surfaceBorder: '#23232C',
+            glassDark: 'rgba(15, 15, 20, 0.7)',
+            glassCard: 'rgba(24, 24, 32, 0.6)',
+            glassBorder: 'rgba(212, 175, 55, 0.28)',
           },
           fontFamily: {
             cinzel: ['Cinzel', 'serif'],
@@ -38,15 +37,47 @@
     html {
       scroll-behavior: smooth;
     }
+    body {
+      background-color: #050507;
+      background-image: 
+        radial-gradient(circle at 20% 15%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 60%, rgba(212, 175, 55, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 95%, rgba(153, 101, 21, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
     .gold-gradient-text {
-      background: linear-gradient(135deg, #FDE68A, #D4AF37, #B45309);
+      background: linear-gradient(135deg, #FFF0B8, #D4AF37, #A37015);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .gold-border {
+    .glass-panel {
+      background: rgba(20, 20, 26, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(212, 175, 55, 0.24);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.07);
     }
-    
+    .glass-card-hover {
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .glass-card-hover:hover {
+      transform: translateY(-6px);
+      background: rgba(30, 30, 40, 0.8);
+      border-color: rgba(212, 175, 55, 0.6);
+      box-shadow: 0 22px 48px rgba(212, 175, 55, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    /* Scroll-Driven Reveal Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* Before / After Slider */
     .ba-container {
       position: relative;
@@ -76,15 +107,15 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: #D4AF37;
       color: #000;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 16px rgba(212, 175, 55, 0.7);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.9);
       font-size: 13px;
     }
 
@@ -92,8 +123,8 @@
     .service-card.selected,
     .stylist-card.selected {
       border-color: #D4AF37 !important;
-      background-color: #1F1D15 !important;
-      box-shadow: 0 0 18px rgba(212, 175, 55, 0.2);
+      background: rgba(212, 175, 55, 0.18) !important;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.28);
     }
     .slot-pill.selected,
     .date-pill.selected {
@@ -101,22 +132,22 @@
       color: #000 !important;
       border-color: #D4AF37 !important;
       font-weight: 700 !important;
-      box-shadow: 0 0 14px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
     }
   </style>
 </head>
-<body class="bg-darkBg text-gray-200 font-sans antialiased selection:bg-brandGold selection:text-black">
+<body class="text-gray-200 font-sans antialiased selection:bg-brandGold selection:text-black">
 
   <!-- TOP CONCIERGE BAR -->
-  <div class="bg-surfaceBg text-gray-400 text-xs py-2.5 px-6 border-b border-white/5">
+  <div class="bg-black/60 backdrop-blur-md text-gray-400 text-xs py-2.5 px-6 border-b border-white/5">
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
       <div class="flex items-center gap-5">
         <span><i class="fa-solid fa-phone text-brandGold mr-1.5"></i> +91 98765 43210</span>
         <span class="hidden md:inline"><i class="fa-solid fa-location-dot text-brandGold mr-1.5"></i> Prime Circle, Ring Road, Rajkot</span>
       </div>
       <div class="flex items-center gap-4">
-        <span class="flex items-center gap-1.5 text-emerald-400">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Master Stylist Rosters Active
+        <span class="flex items-center gap-1.5 text-emerald-400 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Real-time Master Stylist Rosters Active
         </span>
         <span class="text-gray-600">|</span>
         <span class="text-brandGold">Tue - Sun: 9 AM - 9 PM</span>
@@ -124,114 +155,118 @@
     </div>
   </div>
 
-  <!-- NAVIGATION HEADER -->
-  <header class="sticky top-0 z-40 bg-darkBg/95 backdrop-blur-md border-b border-white/10">
+  <!-- NAVIGATION HEADER WITH GLASSMORPHISM -->
+  <header class="sticky top-0 z-40 bg-black/75 backdrop-blur-xl border-b border-white/10 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="#" class="flex items-center gap-2">
         <span class="text-2xl sm:text-3xl font-bold font-cinzel tracking-widest gold-gradient-text">APEX</span>
-        <span class="text-[11px] uppercase tracking-widest text-gray-400 pl-2 border-l border-brandGold/40 font-medium">Salon & Spa</span>
+        <span class="text-[11px] uppercase tracking-widest text-gray-400 pl-2 border-l border-brandGold/40 font-medium">Luxe Salon</span>
       </a>
 
-      <nav class="hidden lg:flex items-center space-x-7 text-sm font-medium">
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-medium">
         <a href="#home" class="hover:text-brandGold transition-colors">Home</a>
-        <a href="#about" class="hover:text-brandGold transition-colors">Our Story</a>
+        <a href="#about" class="hover:text-brandGold transition-colors">Philosophy</a>
+        <a href="#rituals" class="hover:text-brandGold transition-colors">The Ritual</a>
         <a href="#services" class="hover:text-brandGold transition-colors">Services</a>
         <a href="#stylists" class="hover:text-brandGold transition-colors">Master Artists</a>
+        <a href="#lounge-qr" class="hover:text-brandGold transition-colors flex items-center gap-1">
+          <i class="fa-solid fa-qrcode text-xs text-brandGold"></i> VIP Lounge
+        </a>
         <a href="#transformation" class="hover:text-brandGold transition-colors">Transformations</a>
         <a href="#gallery" class="hover:text-brandGold transition-colors">Lookbook</a>
         <a href="#testimonials" class="hover:text-brandGold transition-colors">Reviews</a>
-        <a href="#scheduler" class="text-brandGold transition-colors flex items-center gap-1 font-semibold">
-          <i class="fa-regular fa-calendar-check"></i> Book Stylist
-        </a>
       </nav>
 
-      <a href="#scheduler" class="bg-brandGold hover:bg-brandGoldDark text-black text-xs md:text-sm font-bold py-2.5 px-6 rounded-full transition-all duration-300 shadow-lg shadow-brandGold/15 flex items-center gap-2">
-        <i class="fa-solid fa-calendar-days"></i>
-        <span>Book Stylist</span>
-      </a>
+      <div class="flex items-center gap-3">
+        <a href="#scheduler" class="bg-gradient-to-r from-brandGold to-brandGoldDark text-black text-xs md:text-sm font-bold py-2.5 px-6 rounded-full transition-all duration-300 shadow-lg shadow-brandGold/20 hover:scale-105 flex items-center gap-2">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>Book Stylist</span>
+        </a>
+      </div>
     </div>
   </header>
 
-  <!-- 1. HERO SECTION -->
-  <section id="home" class="relative min-h-[90vh] flex items-center justify-center text-center px-5 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/80 to-transparent z-10"></div>
-    <div class="absolute inset-0 bg-cover bg-center opacity-30 filter grayscale" style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1800&q=80');"></div>
+  <!-- 1. HERO SECTION (SCROLL MOTION ACCENTS) -->
+  <section id="home" class="relative min-h-[92vh] flex items-center justify-center text-center px-5 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-t from-[#050507] via-[#050507]/80 to-transparent z-10"></div>
+    <div class="absolute inset-0 bg-cover bg-center opacity-25 filter grayscale scale-105 transition-transform duration-1000" style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1800&q=80');"></div>
 
-    <div class="relative z-20 max-w-4xl mx-auto py-20">
-      <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-brandGold/10 border border-brandGold/30 text-brandGold text-xs font-semibold uppercase tracking-widest mb-6">
-        <i class="fa-solid fa-crown text-xs"></i>
-        Dedicated Master Stylists &bull; Seamless Appointment Hub
+    <div class="relative z-20 max-w-4xl mx-auto py-20 reveal active">
+      <div class="inline-flex items-center gap-2 py-1.5 px-5 rounded-full glass-panel text-brandGold text-xs font-semibold uppercase tracking-widest mb-6">
+        <i class="fa-solid fa-sparkles text-xs"></i>
+        Scroll Motion &bull; Couture Grooming Experience
       </div>
       <h1 class="text-4xl sm:text-6xl lg:text-7xl font-cinzel font-bold tracking-tight text-white leading-tight mb-6">
-        Where Modern Elegance <br>
-        <span class="gold-gradient-text">Meets Precision</span>
+        Where Pure Geometry <br>
+        <span class="gold-gradient-text">Meets Unrivaled Luxury</span>
       </h1>
       <p class="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-        Choose your bespoke treatment, hand-select your dedicated stylist, and experience couture grooming crafted exclusively around your calendar.
+        Immerse yourself in precision grooming choreographed to elevate your personal brand. Hand-select your dedicated stylist and reserve seamless appointments.
       </p>
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="#scheduler" class="w-full sm:w-auto bg-brandGold hover:bg-brandGoldDark text-black font-bold px-8 py-3.5 rounded-lg transition-all text-sm shadow-xl shadow-brandGold/15">
+        <a href="#scheduler" class="w-full sm:w-auto bg-brandGold hover:bg-brandGoldDark text-black font-bold px-8 py-3.5 rounded-xl transition-all text-sm shadow-xl shadow-brandGold/20 hover:scale-105">
           Reserve With A Stylist
         </a>
-        <a href="#stylists" class="w-full sm:w-auto gold-border hover:bg-white/5 text-gray-200 font-semibold px-8 py-3.5 rounded-lg transition-all text-sm">
-          Meet Creative Team
+        <a href="#rituals" class="w-full sm:w-auto glass-panel hover:bg-white/10 text-gray-200 font-semibold px-8 py-3.5 rounded-xl transition-all text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrow-down text-brandGold"></i>
+          <span>Discover The Ritual</span>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- 2. QUICK STATS & HIGHLIGHTS -->
-  <section class="border-y border-white/10 bg-surfaceBg/50 py-8 px-6">
-    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-      <div>
-        <p class="text-2xl sm:text-3xl font-cinzel font-bold text-brandGold">12,000+</p>
-        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Groomed Patrons</p>
+  <!-- 2. QUICK STATS IN GLASSMETRIC CARDS -->
+  <section class="border-y border-white/10 py-10 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
+      <div class="glass-panel p-6 rounded-2xl text-center glass-card-hover">
+        <p class="text-3xl font-cinzel font-bold text-brandGold">14,000+</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1.5">Groomed Patrons</p>
       </div>
-      <div>
-        <p class="text-2xl sm:text-3xl font-cinzel font-bold text-brandGold">15+</p>
-        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Creative Directors</p>
+      <div class="glass-panel p-6 rounded-2xl text-center glass-card-hover">
+        <p class="text-3xl font-cinzel font-bold text-brandGold">15+</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1.5">Creative Directors</p>
       </div>
-      <div>
-        <p class="text-2xl sm:text-3xl font-cinzel font-bold text-brandGold">100%</p>
-        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Cruelty-Free Luxury</p>
+      <div class="glass-panel p-6 rounded-2xl text-center glass-card-hover">
+        <p class="text-3xl font-cinzel font-bold text-brandGold">100%</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1.5">Vegan Formulations</p>
       </div>
-      <div>
-        <p class="text-2xl sm:text-3xl font-cinzel font-bold text-brandGold">4.9 / 5.0</p>
-        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Google Verified</p>
+      <div class="glass-panel p-6 rounded-2xl text-center glass-card-hover">
+        <p class="text-3xl font-cinzel font-bold text-brandGold">4.95 / 5.0</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1.5">Google Rating</p>
       </div>
     </div>
   </section>
 
-  <!-- 3. ABOUT / PHILOSOPHY -->
-  <section id="about" class="py-24 px-6 border-b border-white/5 bg-surfaceBg/30">
-    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+  <!-- 3. PHILOSOPHY & ABOUT -->
+  <section id="about" class="py-24 px-6 border-b border-white/5">
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center reveal">
       <div class="relative">
-        <div class="rounded-2xl overflow-hidden gold-border aspect-[4/3] shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1000&q=80" alt="Salon Interior" class="w-full h-full object-cover">
+        <div class="rounded-3xl overflow-hidden glass-panel p-2 shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1000&q=80" alt="Salon Interior" class="w-full h-[400px] object-cover rounded-2xl">
         </div>
-        <div class="absolute -bottom-6 -right-6 bg-surfaceCard p-5 rounded-xl border border-brandGold/30 shadow-xl hidden sm:block">
+        <div class="absolute -bottom-6 -right-4 glass-panel p-6 rounded-2xl shadow-2xl hidden sm:block border-brandGold/40">
           <p class="text-3xl font-cinzel font-bold text-brandGold">12+ Years</p>
-          <p class="text-xs text-gray-400 uppercase tracking-wider">Of Salon Mastery</p>
+          <p class="text-xs text-gray-300 uppercase tracking-wider">Of Haute Coiffure</p>
         </div>
       </div>
 
       <div>
         <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">The APEX Philosophy</span>
-        <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2 mb-6">Bespoke Aesthetics Designed For You</h2>
+        <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2 mb-6">Bespoke Aesthetics Designed Around You</h2>
         <p class="text-gray-400 text-sm leading-relaxed mb-6">
-          Founded on the principle of uncompromised craftsmanship, APEX Salon & Spa combines world-class styling methodologies with organic botanical luxury. Every cut, color transition, and dermal treatment is customized to reflect your lifestyle.
+          Founded on the principle of precision craftsmanship, APEX Salon & Spa combines world-class styling methodologies with organic botanical luxury. Every cut, color transition, and dermal treatment is customized to reflect your lifestyle.
         </p>
         
         <div class="grid grid-cols-2 gap-6 pt-4 border-t border-white/10">
-          <div>
-            <h4 class="font-cinzel text-lg font-bold text-white flex items-center gap-2">
+          <div class="glass-panel p-4 rounded-xl">
+            <h4 class="font-cinzel text-base font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-check text-brandGold text-sm"></i> Master Directors
             </h4>
             <p class="text-xs text-gray-400 mt-1">Trained by international academies across Europe.</p>
           </div>
-          <div>
-            <h4 class="font-cinzel text-lg font-bold text-white flex items-center gap-2">
+          <div class="glass-panel p-4 rounded-xl">
+            <h4 class="font-cinzel text-base font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-check text-brandGold text-sm"></i> Clean Chemistry
             </h4>
             <p class="text-xs text-gray-400 mt-1">Sulphate-free, non-toxic & cruelty-free care.</p>
@@ -241,17 +276,53 @@
     </div>
   </section>
 
-  <!-- 4. SERVICES OVERVIEW MENU -->
+  <!-- 4. NEW IN ₹70k: THE 4-STEP GROOMING RITUAL (INTERACTIVE SCROLL FLOW) -->
+  <section id="rituals" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">The Experience Flow</span>
+      <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">The Signature 4-Step Ritual</h2>
+      <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-4"></div>
+      <p class="text-gray-400 text-xs sm:text-sm">Every visit to APEX is an orchestrated wellness journey engineered for flawless transformation.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+      <div class="glass-panel glass-card-hover p-7 rounded-2xl relative">
+        <span class="font-cinzel text-4xl font-black text-brandGold/30 block mb-3">01</span>
+        <h3 class="font-cinzel text-lg font-bold text-white mb-2">Aesthetic Consultation</h3>
+        <p class="text-xs text-gray-400 leading-relaxed">Comprehensive facial structure mapping, skin pH diagnostics, and bespoke routine planning.</p>
+      </div>
+
+      <div class="glass-panel glass-card-hover p-7 rounded-2xl relative">
+        <span class="font-cinzel text-4xl font-black text-brandGold/30 block mb-3">02</span>
+        <h3 class="font-cinzel text-lg font-bold text-white mb-2">Aromatherapy Wash</h3>
+        <p class="text-xs text-gray-400 leading-relaxed">Invigorating botanical cleanse with heated towel acupressure and essential oil relaxation.</p>
+      </div>
+
+      <div class="glass-panel glass-card-hover p-7 rounded-2xl relative">
+        <span class="font-cinzel text-4xl font-black text-brandGold/30 block mb-3">03</span>
+        <h3 class="font-cinzel text-lg font-bold text-white mb-2">Master Craft Execution</h3>
+        <p class="text-xs text-gray-400 leading-relaxed">Precision geometric cutting or dermal infusion curated specifically by your chosen director.</p>
+      </div>
+
+      <div class="glass-panel glass-card-hover p-7 rounded-2xl relative">
+        <span class="font-cinzel text-4xl font-black text-brandGold/30 block mb-3">04</span>
+        <h3 class="font-cinzel text-lg font-bold text-white mb-2">Finishing Elixir</h3>
+        <p class="text-xs text-gray-400 leading-relaxed">Weightless serum locking, micro-mist hydration, and personalized home maintenance guidance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. SERVICES OVERVIEW MENU -->
   <section id="services" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
-    <div class="text-center max-w-2xl mx-auto mb-16">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
       <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Our Portfolio</span>
       <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Curated Salon Services</h2>
       <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4"></div>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-8">
-      <div class="bg-surfaceCard p-7 rounded-xl gold-border hover:border-brandGold/60 transition-all duration-300 group">
-        <div class="w-12 h-12 rounded-lg bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
+    <div class="grid md:grid-cols-3 gap-8 reveal">
+      <div class="glass-panel glass-card-hover p-8 rounded-2xl group">
+        <div class="w-12 h-12 rounded-xl bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
           <i class="fa-solid fa-scissors"></i>
         </div>
         <h3 class="text-xl font-cinzel font-bold text-white mb-2">Couture Hair Architecture</h3>
@@ -272,8 +343,8 @@
         </div>
       </div>
 
-      <div class="bg-surfaceCard p-7 rounded-xl gold-border hover:border-brandGold/60 transition-all duration-300 group">
-        <div class="w-12 h-12 rounded-lg bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
+      <div class="glass-panel glass-card-hover p-8 rounded-2xl group">
+        <div class="w-12 h-12 rounded-xl bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
           <i class="fa-solid fa-sparkles"></i>
         </div>
         <h3 class="text-xl font-cinzel font-bold text-white mb-2">Dermal & Facial Alchemy</h3>
@@ -294,8 +365,8 @@
         </div>
       </div>
 
-      <div class="bg-surfaceCard p-7 rounded-xl gold-border hover:border-brandGold/60 transition-all duration-300 group">
-        <div class="w-12 h-12 rounded-lg bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
+      <div class="glass-panel glass-card-hover p-8 rounded-2xl group">
+        <div class="w-12 h-12 rounded-xl bg-brandGold/10 flex items-center justify-center text-brandGold text-xl mb-6 group-hover:bg-brandGold group-hover:text-black transition-all">
           <i class="fa-solid fa-crown"></i>
         </div>
         <h3 class="text-xl font-cinzel font-bold text-white mb-2">Bridal & Celebrations</h3>
@@ -318,18 +389,17 @@
     </div>
   </section>
 
-  <!-- 5. NEW: PRO STYLIST TEAM SHOWCASE (THE ₹50,000 HIGHLIGHT) -->
+  <!-- 6. MASTER ARTISTS SHOWCASE -->
   <section id="stylists" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
-    <div class="text-center max-w-2xl mx-auto mb-16">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
       <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Artistic Directors</span>
       <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Meet Our Master Stylists</h2>
       <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-4"></div>
       <p class="text-gray-400 text-xs sm:text-sm">World-class artisans with specialized mastery in hair architecture, color chemistry, and dermal rejuvenation.</p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Stylist 1 -->
-      <div class="bg-surfaceCard rounded-2xl overflow-hidden gold-border group hover:border-brandGold transition-all duration-300">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+      <div class="glass-panel rounded-2xl overflow-hidden group hover:border-brandGold transition-all duration-300">
         <div class="aspect-[3/4] overflow-hidden relative">
           <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80" alt="Aryan Mehta" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
           <span class="absolute top-3 right-3 bg-black/80 text-brandGold text-[11px] font-bold px-2.5 py-1 rounded-full border border-brandGold/40 flex items-center gap-1">
@@ -340,14 +410,13 @@
           <h3 class="font-cinzel text-lg font-bold text-white">Aryan Mehta</h3>
           <p class="text-brandGold text-xs font-medium mb-2">Creative Hair Director</p>
           <p class="text-gray-400 text-xs leading-relaxed mb-4">10+ years experience. Specialist in precision fades, textured couture cuts, and European balayage.</p>
-          <a href="#scheduler" onclick="quickSelectStylist('Aryan Mehta')" class="block text-center w-full py-2 rounded-lg bg-surfaceBg border border-white/10 hover:border-brandGold hover:text-brandGold text-xs font-semibold transition-all">
+          <a href="#scheduler" onclick="quickSelectStylist('Aryan Mehta')" class="block text-center w-full py-2 rounded-lg glass-panel hover:bg-brandGold hover:text-black text-xs font-semibold transition-all">
             Book With Aryan
           </a>
         </div>
       </div>
 
-      <!-- Stylist 2 -->
-      <div class="bg-surfaceCard rounded-2xl overflow-hidden gold-border group hover:border-brandGold transition-all duration-300">
+      <div class="glass-panel rounded-2xl overflow-hidden group hover:border-brandGold transition-all duration-300">
         <div class="aspect-[3/4] overflow-hidden relative">
           <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=700&q=80" alt="Maya Patel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
           <span class="absolute top-3 right-3 bg-black/80 text-brandGold text-[11px] font-bold px-2.5 py-1 rounded-full border border-brandGold/40 flex items-center gap-1">
@@ -358,14 +427,13 @@
           <h3 class="font-cinzel text-lg font-bold text-white">Maya Patel</h3>
           <p class="text-brandGold text-xs font-medium mb-2">Senior Chromatic Specialist</p>
           <p class="text-gray-400 text-xs leading-relaxed mb-4">Toni&Guy certified. Master in dimensional ombre, pastel tones, and corrective color alchemy.</p>
-          <a href="#scheduler" onclick="quickSelectStylist('Maya Patel')" class="block text-center w-full py-2 rounded-lg bg-surfaceBg border border-white/10 hover:border-brandGold hover:text-brandGold text-xs font-semibold transition-all">
+          <a href="#scheduler" onclick="quickSelectStylist('Maya Patel')" class="block text-center w-full py-2 rounded-lg glass-panel hover:bg-brandGold hover:text-black text-xs font-semibold transition-all">
             Book With Maya
           </a>
         </div>
       </div>
 
-      <!-- Stylist 3 -->
-      <div class="bg-surfaceCard rounded-2xl overflow-hidden gold-border group hover:border-brandGold transition-all duration-300">
+      <div class="glass-panel rounded-2xl overflow-hidden group hover:border-brandGold transition-all duration-300">
         <div class="aspect-[3/4] overflow-hidden relative">
           <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=80" alt="Kabir Verma" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
           <span class="absolute top-3 right-3 bg-black/80 text-brandGold text-[11px] font-bold px-2.5 py-1 rounded-full border border-brandGold/40 flex items-center gap-1">
@@ -376,14 +444,13 @@
           <h3 class="font-cinzel text-lg font-bold text-white">Kabir Verma</h3>
           <p class="text-brandGold text-xs font-medium mb-2">Beard Sculptor & Spa Master</p>
           <p class="text-gray-400 text-xs leading-relaxed mb-4">Royal bespoke grooming expert. Specializes in luxury hot-towel shaves and scalp massages.</p>
-          <a href="#scheduler" onclick="quickSelectStylist('Kabir Verma')" class="block text-center w-full py-2 rounded-lg bg-surfaceBg border border-white/10 hover:border-brandGold hover:text-brandGold text-xs font-semibold transition-all">
+          <a href="#scheduler" onclick="quickSelectStylist('Kabir Verma')" class="block text-center w-full py-2 rounded-lg glass-panel hover:bg-brandGold hover:text-black text-xs font-semibold transition-all">
             Book With Kabir
           </a>
         </div>
       </div>
 
-      <!-- Stylist 4 -->
-      <div class="bg-surfaceCard rounded-2xl overflow-hidden gold-border group hover:border-brandGold transition-all duration-300">
+      <div class="glass-panel rounded-2xl overflow-hidden group hover:border-brandGold transition-all duration-300">
         <div class="aspect-[3/4] overflow-hidden relative">
           <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=700&q=80" alt="Dr. Alisha Roy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
           <span class="absolute top-3 right-3 bg-black/80 text-brandGold text-[11px] font-bold px-2.5 py-1 rounded-full border border-brandGold/40 flex items-center gap-1">
@@ -394,7 +461,7 @@
           <h3 class="font-cinzel text-lg font-bold text-white">Dr. Alisha Roy</h3>
           <p class="text-brandGold text-xs font-medium mb-2">Aesthetic Dermal Consultant</p>
           <p class="text-gray-400 text-xs leading-relaxed mb-4">Dermatology aesthetician. Expert in non-invasive hydra infusions and anti-aging therapies.</p>
-          <a href="#scheduler" onclick="quickSelectStylist('Dr. Alisha Roy')" class="block text-center w-full py-2 rounded-lg bg-surfaceBg border border-white/10 hover:border-brandGold hover:text-brandGold text-xs font-semibold transition-all">
+          <a href="#scheduler" onclick="quickSelectStylist('Dr. Alisha Roy')" class="block text-center w-full py-2 rounded-lg glass-panel hover:bg-brandGold hover:text-black text-xs font-semibold transition-all">
             Book With Alisha
           </a>
         </div>
@@ -402,17 +469,71 @@
     </div>
   </section>
 
-  <!-- 6. BEFORE / AFTER INTERACTIVE SLIDER -->
+  <!-- 7. VIP LOUNGE & DIGITAL IN-SALON QR MENU -->
+  <section id="lounge-qr" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
+    <div class="glass-panel p-8 sm:p-14 rounded-3xl relative overflow-hidden reveal">
+      <div class="grid lg:grid-cols-12 gap-10 items-center">
+        
+        <div class="lg:col-span-7 space-y-6">
+          <span class="inline-flex items-center gap-2 py-1 px-3.5 rounded-full bg-brandGold/10 border border-brandGold/30 text-brandGold text-xs font-semibold uppercase tracking-widest">
+            <i class="fa-solid fa-qrcode"></i> Contactless Experience
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white leading-tight">
+            VIP Lounge & Instant <br>
+            <span class="gold-gradient-text">In-Salon QR Menu</span>
+          </h2>
+          <p class="text-gray-300 text-sm leading-relaxed font-light">
+            When you relax at our styling station or spa suite, simply scan the tabletop gold acrylic QR placard with your smartphone. Access our complete interactive catalog, therapist profiles, and special seasonal offerings instantly.
+          </p>
+
+          <div class="grid sm:grid-cols-2 gap-4 pt-2">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-brandGold/10 text-brandGold flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-wifi text-xs"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white">Complimentary High-Speed Wi-Fi</h4>
+                <p class="text-[11px] text-gray-400">Instant connection during your service.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-brandGold/10 text-brandGold flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-mug-hot text-xs"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white">Artisanal Beverage Lounge</h4>
+                <p class="text-[11px] text-gray-400">Organic brew teas & espresso bar.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="glass-panel p-6 rounded-2xl text-center border-brandGold/40 max-w-xs shadow-2xl relative">
+            <span class="text-[10px] uppercase tracking-widest text-brandGold font-bold">APEX Digital Menu</span>
+            <div class="w-44 h-44 mx-auto my-4 bg-white p-3 rounded-xl shadow-inner flex items-center justify-center">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://apex-salon.demo&color=09090b" alt="APEX Digital QR" class="w-full h-full">
+            </div>
+            <p class="text-xs text-gray-300 font-medium">Scan with Phone Camera</p>
+            <span class="text-[10px] text-gray-500 block mt-1">Live In-Salon Synchronization</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. BEFORE / AFTER INTERACTIVE SLIDER -->
   <section id="transformation" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
-    <div class="text-center max-w-2xl mx-auto mb-16">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
       <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Real Results</span>
       <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Interactive Transformation Showcase</h2>
       <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-4"></div>
       <p class="text-gray-400 text-xs sm:text-sm">Drag the gold handle horizontally to examine our signature transformation results.</p>
     </div>
 
-    <div class="max-w-3xl mx-auto">
-      <div id="baSlider" class="ba-container rounded-2xl gold-border shadow-2xl h-[380px] sm:h-[460px]">
+    <div class="max-w-3xl mx-auto reveal">
+      <div id="baSlider" class="ba-container rounded-2xl glass-panel shadow-2xl h-[380px] sm:h-[460px]">
         <img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=1200&q=80" alt="After" class="absolute inset-0 w-full h-full object-cover">
         <span class="absolute top-4 right-4 z-10 bg-black/75 text-brandGold text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-brandGold/40">After APEX</span>
 
@@ -431,44 +552,44 @@
     </div>
   </section>
 
-  <!-- 7. SMART CALENDAR & STYLIST SCHEDULER (THE ₹50,000 ENHANCED ENGINE) -->
+  <!-- 9. PRO STYLIST & SLOT SCHEDULER -->
   <section id="scheduler" class="py-24 px-6 max-w-6xl mx-auto border-b border-white/5">
-    <div class="text-center mb-14">
+    <div class="text-center mb-14 reveal">
       <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Pro Reservation Engine</span>
       <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Book Your Appointment In 4 Steps</h2>
       <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-4"></div>
       <p class="text-gray-400 text-xs sm:text-sm">Hand-select your preferred stylist, service, and custom time slot.</p>
     </div>
 
-    <div class="bg-surfaceCard rounded-2xl gold-border shadow-2xl p-6 sm:p-10">
+    <div class="glass-panel rounded-3xl shadow-2xl p-6 sm:p-10 reveal">
 
-      <!-- STEP 1: CHOOSE STYLIST (NEW IN ₹50K) -->
+      <!-- STEP 1: CHOOSE STYLIST -->
       <div class="mb-10">
         <div class="flex items-center gap-3 mb-5">
           <span class="w-7 h-7 rounded-full bg-brandGold text-black font-bold text-xs flex items-center justify-center">1</span>
           <h3 class="text-lg font-cinzel font-bold text-white">Select Your Master Stylist</h3>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="stylistSelectorGrid">
-          <div onclick="selectStylist(this, 'Aryan Mehta', 'Hair Director')" class="stylist-card selected cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-xl p-3.5 text-center transition-all">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div onclick="selectStylist(this, 'Aryan Mehta', 'Hair Director')" class="stylist-card selected cursor-pointer glass-panel rounded-xl p-3.5 text-center transition-all">
             <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 rounded-full mx-auto object-cover border-2 border-brandGold/40 mb-2">
             <h4 class="font-bold text-xs sm:text-sm text-white">Aryan Mehta</h4>
             <span class="text-[10px] text-brandGold block">Hair Director</span>
           </div>
 
-          <div onclick="selectStylist(this, 'Maya Patel', 'Color Specialist')" class="stylist-card cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-xl p-3.5 text-center transition-all">
+          <div onclick="selectStylist(this, 'Maya Patel', 'Color Specialist')" class="stylist-card cursor-pointer glass-panel rounded-xl p-3.5 text-center transition-all">
             <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 rounded-full mx-auto object-cover border-2 border-brandGold/40 mb-2">
             <h4 class="font-bold text-xs sm:text-sm text-white">Maya Patel</h4>
             <span class="text-[10px] text-brandGold block">Color Specialist</span>
           </div>
 
-          <div onclick="selectStylist(this, 'Kabir Verma', 'Beard & Spa')" class="stylist-card cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-xl p-3.5 text-center transition-all">
+          <div onclick="selectStylist(this, 'Kabir Verma', 'Beard & Spa')" class="stylist-card cursor-pointer glass-panel rounded-xl p-3.5 text-center transition-all">
             <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 rounded-full mx-auto object-cover border-2 border-brandGold/40 mb-2">
             <h4 class="font-bold text-xs sm:text-sm text-white">Kabir Verma</h4>
             <span class="text-[10px] text-brandGold block">Beard & Spa</span>
           </div>
 
-          <div onclick="selectStylist(this, 'Dr. Alisha Roy', 'Skin Aesthetician')" class="stylist-card cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-xl p-3.5 text-center transition-all">
+          <div onclick="selectStylist(this, 'Dr. Alisha Roy', 'Skin Aesthetician')" class="stylist-card cursor-pointer glass-panel rounded-xl p-3.5 text-center transition-all">
             <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 rounded-full mx-auto object-cover border-2 border-brandGold/40 mb-2">
             <h4 class="font-bold text-xs sm:text-sm text-white">Dr. Alisha</h4>
             <span class="text-[10px] text-brandGold block">Skin Aesthetician</span>
@@ -484,7 +605,7 @@
         </div>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div onclick="selectService(this, 'Signature Haircut & Style', '₹450', '45 min')" class="service-card selected cursor-pointer bg-surfaceBg border border-surfaceBorder hover:border-brandGold/50 rounded-xl p-4 transition-all">
+          <div onclick="selectService(this, 'Signature Haircut & Style', '₹450', '45 min')" class="service-card selected cursor-pointer glass-panel rounded-xl p-4 transition-all">
             <div class="flex justify-between items-start mb-2">
               <i class="fa-solid fa-scissors text-brandGold text-lg"></i>
               <span class="text-xs bg-brandGold/10 text-brandGold px-2 py-0.5 rounded font-semibold">45 min</span>
@@ -494,7 +615,7 @@
             <p class="text-sm font-bold text-brandGold mt-3">₹450</p>
           </div>
 
-          <div onclick="selectService(this, 'Royal Beard Sculpt & Spa', '₹350', '30 min')" class="service-card cursor-pointer bg-surfaceBg border border-surfaceBorder hover:border-brandGold/50 rounded-xl p-4 transition-all">
+          <div onclick="selectService(this, 'Royal Beard Sculpt & Spa', '₹350', '30 min')" class="service-card cursor-pointer glass-panel rounded-xl p-4 transition-all">
             <div class="flex justify-between items-start mb-2">
               <i class="fa-solid fa-wand-magic-sparkles text-brandGold text-lg"></i>
               <span class="text-xs bg-brandGold/10 text-brandGold px-2 py-0.5 rounded font-semibold">30 min</span>
@@ -504,7 +625,7 @@
             <p class="text-sm font-bold text-brandGold mt-3">₹350</p>
           </div>
 
-          <div onclick="selectService(this, 'Hydra-Glow Facial Therapy', '₹1,800', '60 min')" class="service-card cursor-pointer bg-surfaceBg border border-surfaceBorder hover:border-brandGold/50 rounded-xl p-4 transition-all">
+          <div onclick="selectService(this, 'Hydra-Glow Facial Therapy', '₹1,800', '60 min')" class="service-card cursor-pointer glass-panel rounded-xl p-4 transition-all">
             <div class="flex justify-between items-start mb-2">
               <i class="fa-solid fa-spa text-brandGold text-lg"></i>
               <span class="text-xs bg-brandGold/10 text-brandGold px-2 py-0.5 rounded font-semibold">60 min</span>
@@ -514,7 +635,7 @@
             <p class="text-sm font-bold text-brandGold mt-3">₹1,800</p>
           </div>
 
-          <div onclick="selectService(this, 'Balayage & Global Color', '₹3,499+', '120 min')" class="service-card cursor-pointer bg-surfaceBg border border-surfaceBorder hover:border-brandGold/50 rounded-xl p-4 transition-all">
+          <div onclick="selectService(this, 'Balayage & Global Color', '₹3,499+', '120 min')" class="service-card cursor-pointer glass-panel rounded-xl p-4 transition-all">
             <div class="flex justify-between items-start mb-2">
               <i class="fa-solid fa-paintbrush text-brandGold text-lg"></i>
               <span class="text-xs bg-brandGold/10 text-brandGold px-2 py-0.5 rounded font-semibold">120 min</span>
@@ -536,27 +657,27 @@
         <div class="mb-6">
           <p class="text-xs text-gray-400 mb-3 font-medium">Select Day:</p>
           <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
-            <div onclick="selectDate(this, 'Today, Sep 20')" class="date-pill selected cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+            <div onclick="selectDate(this, 'Today, Sep 20')" class="date-pill selected cursor-pointer glass-panel rounded-xl p-3 text-center transition-all">
               <span class="block text-[11px] text-gray-400">TODAY</span>
               <span class="block text-sm font-bold mt-1">Sep 20</span>
             </div>
-            <div onclick="selectDate(this, 'Mon, Sep 21')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+            <div onclick="selectDate(this, 'Mon, Sep 21')" class="date-pill cursor-pointer glass-panel rounded-xl p-3 text-center transition-all">
               <span class="block text-[11px] text-gray-400">MON</span>
               <span class="block text-sm font-bold mt-1">Sep 21</span>
             </div>
-            <div onclick="selectDate(this, 'Tue, Sep 22')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+            <div onclick="selectDate(this, 'Tue, Sep 22')" class="date-pill cursor-pointer glass-panel rounded-xl p-3 text-center transition-all">
               <span class="block text-[11px] text-gray-400">TUE</span>
               <span class="block text-sm font-bold mt-1">Sep 22</span>
             </div>
-            <div onclick="selectDate(this, 'Wed, Sep 23')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+            <div onclick="selectDate(this, 'Wed, Sep 23')" class="date-pill cursor-pointer glass-panel rounded-xl p-3 text-center transition-all">
               <span class="block text-[11px] text-gray-400">WED</span>
               <span class="block text-sm font-bold mt-1">Sep 23</span>
             </div>
-            <div onclick="selectDate(this, 'Thu, Sep 24')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+            <div onclick="selectDate(this, 'Thu, Sep 24')" class="date-pill cursor-pointer glass-panel rounded-xl p-3 text-center transition-all">
               <span class="block text-[11px] text-gray-400">THU</span>
               <span class="block text-sm font-bold mt-1">Sep 24</span>
             </div>
-            <div onclick="selectDate(this, 'Fri, Sep 25')" class="date-pill cursor-pointer bg-surfaceBg border border-surfaceBorder rounded-lg p-3 text-center transition-all">
+            <div onclick="selectDate(this, 'Fri, Sep 25')" class="date-pill cursor-pointer glass-panel rounded-xl p-3 text-center transition-all">
               <span class="block text-[11px] text-gray-400">FRI</span>
               <span class="block text-sm font-bold mt-1">Sep 25</span>
             </div>
@@ -569,21 +690,21 @@
             <div>
               <span class="text-[11px] uppercase tracking-wider text-brandGold font-semibold block mb-2">Morning Slots</span>
               <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
-                <button onclick="selectSlot(this, '09:30 AM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">09:30 AM</button>
-                <button onclick="selectSlot(this, '10:15 AM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">10:15 AM</button>
-                <button onclick="selectSlot(this, '11:00 AM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">11:00 AM</button>
-                <button onclick="selectSlot(this, '11:45 AM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">11:45 AM</button>
+                <button onclick="selectSlot(this, '09:30 AM')" class="slot-pill glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">09:30 AM</button>
+                <button onclick="selectSlot(this, '10:15 AM')" class="slot-pill glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">10:15 AM</button>
+                <button onclick="selectSlot(this, '11:00 AM')" class="slot-pill glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">11:00 AM</button>
+                <button onclick="selectSlot(this, '11:45 AM')" class="slot-pill glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">11:45 AM</button>
               </div>
             </div>
 
             <div>
               <span class="text-[11px] uppercase tracking-wider text-brandGold font-semibold block mb-2">Afternoon & Evening</span>
               <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
-                <button onclick="selectSlot(this, '02:00 PM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">02:00 PM</button>
-                <button onclick="selectSlot(this, '03:30 PM')" class="slot-pill selected bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">03:30 PM</button>
-                <button onclick="selectSlot(this, '05:00 PM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">05:00 PM</button>
-                <button onclick="selectSlot(this, '06:15 PM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">06:15 PM</button>
-                <button onclick="selectSlot(this, '07:30 PM')" class="slot-pill bg-surfaceBg border border-surfaceBorder text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">07:30 PM</button>
+                <button onclick="selectSlot(this, '02:00 PM')" class="slot-pill glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">02:00 PM</button>
+                <button onclick="selectSlot(this, '03:30 PM')" class="slot-pill selected glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">03:30 PM</button>
+                <button onclick="selectSlot(this, '05:00 PM')" class="slot-pill glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">05:00 PM</button>
+                <button onclick="selectSlot(this, '06:15 PM')" class="slot-pill glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">06:15 PM</button>
+                <button onclick="selectSlot(this, '07:30 PM')" class="slot-pill glass-panel text-xs py-2.5 rounded-lg hover:border-brandGold transition-all">07:30 PM</button>
               </div>
             </div>
           </div>
@@ -591,7 +712,7 @@
       </div>
 
       <!-- STEP 4: LIVE SUMMARY & ACTION -->
-      <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 bg-surfaceBg/60 p-6 rounded-xl">
+      <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 glass-panel p-6 rounded-2xl">
         <div class="space-y-1 text-center md:text-left">
           <span class="text-xs uppercase tracking-wider text-gray-400">Appointment Overview:</span>
           <p class="font-cinzel text-base sm:text-lg font-bold text-white">
@@ -604,7 +725,7 @@
           </p>
         </div>
 
-        <button onclick="openBookingModal()" class="w-full md:w-auto bg-brandGold hover:bg-brandGoldDark text-black font-bold px-8 py-3.5 rounded-lg text-sm transition-all duration-300 shadow-xl shadow-brandGold/20 flex items-center justify-center gap-2">
+        <button onclick="openBookingModal()" class="w-full md:w-auto bg-gradient-to-r from-brandGold to-brandGoldDark text-black font-bold px-8 py-3.5 rounded-xl text-sm transition-all duration-300 shadow-xl shadow-brandGold/25 hover:scale-105 flex items-center justify-center gap-2">
           <span>Continue Reservation</span>
           <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
@@ -613,41 +734,41 @@
     </div>
   </section>
 
-  <!-- 8. LOOKBOOK / FILTERABLE GALLERY -->
+  <!-- 10. LOOKBOOK / FILTERABLE GALLERY -->
   <section id="gallery" class="py-24 px-6 max-w-7xl mx-auto border-b border-white/5">
-    <div class="text-center max-w-2xl mx-auto mb-12">
+    <div class="text-center max-w-2xl mx-auto mb-12 reveal">
       <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Lookbook</span>
       <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2">Signature Masterpieces</h2>
       <div class="w-16 h-0.5 bg-brandGold mx-auto mt-4 mb-8"></div>
 
       <div class="flex flex-wrap items-center justify-center gap-2">
-        <button onclick="filterGallery('all')" class="gallery-btn active bg-brandGold text-black font-semibold text-xs px-4 py-2 rounded-full transition-all">All Works</button>
-        <button onclick="filterGallery('hair')" class="gallery-btn bg-surfaceCard text-gray-300 hover:text-brandGold font-semibold text-xs px-4 py-2 rounded-full border border-white/10 transition-all">Hair & Styling</button>
-        <button onclick="filterGallery('skin')" class="gallery-btn bg-surfaceCard text-gray-300 hover:text-brandGold font-semibold text-xs px-4 py-2 rounded-full border border-white/10 transition-all">Skin & Glow</button>
-        <button onclick="filterGallery('bridal')" class="gallery-btn bg-surfaceCard text-gray-300 hover:text-brandGold font-semibold text-xs px-4 py-2 rounded-full border border-white/10 transition-all">Bridal</button>
+        <button onclick="filterGallery('all')" class="gallery-btn active bg-brandGold text-black font-semibold text-xs px-5 py-2.5 rounded-full transition-all">All Works</button>
+        <button onclick="filterGallery('hair')" class="gallery-btn glass-panel text-gray-300 hover:text-brandGold font-semibold text-xs px-5 py-2.5 rounded-full transition-all">Hair & Styling</button>
+        <button onclick="filterGallery('skin')" class="gallery-btn glass-panel text-gray-300 hover:text-brandGold font-semibold text-xs px-5 py-2.5 rounded-full transition-all">Skin & Glow</button>
+        <button onclick="filterGallery('bridal')" class="gallery-btn glass-panel text-gray-300 hover:text-brandGold font-semibold text-xs px-5 py-2.5 rounded-full transition-all">Bridal</button>
       </div>
     </div>
 
-    <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="gallery-item hair rounded-xl overflow-hidden gold-border aspect-[3/4] relative group">
+    <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal">
+      <div class="gallery-item hair rounded-2xl overflow-hidden glass-panel aspect-[3/4] relative group">
         <img src="https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=700&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
           <p class="text-xs font-semibold text-white">Platinum Blonde Balayage</p>
         </div>
       </div>
-      <div class="gallery-item skin rounded-xl overflow-hidden gold-border aspect-[3/4] relative group">
+      <div class="gallery-item skin rounded-2xl overflow-hidden glass-panel aspect-[3/4] relative group">
         <img src="https://images.unsplash.com/photo-1512290900672-1f55b9209a2d?auto=format&fit=crop&w=700&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
           <p class="text-xs font-semibold text-white">24K Radiance Dermal Care</p>
         </div>
       </div>
-      <div class="gallery-item bridal rounded-xl overflow-hidden gold-border aspect-[3/4] relative group">
+      <div class="gallery-item bridal rounded-2xl overflow-hidden glass-panel aspect-[3/4] relative group">
         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
           <p class="text-xs font-semibold text-white">Imperial Bridal Look</p>
         </div>
       </div>
-      <div class="gallery-item hair rounded-xl overflow-hidden gold-border aspect-[3/4] relative group">
+      <div class="gallery-item hair rounded-2xl overflow-hidden glass-panel aspect-[3/4] relative group">
         <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
           <p class="text-xs font-semibold text-white">Gentleman Textured Crop</p>
@@ -656,14 +777,14 @@
     </div>
   </section>
 
-  <!-- 9. TESTIMONIALS & REVIEWS -->
-  <section id="testimonials" class="py-24 px-6 border-b border-white/5 bg-surfaceBg/40">
-    <div class="max-w-5xl mx-auto text-center">
+  <!-- 11. TESTIMONIALS & REVIEWS -->
+  <section id="testimonials" class="py-24 px-6 border-b border-white/5">
+    <div class="max-w-5xl mx-auto text-center reveal">
       <span class="text-brandGold text-xs uppercase tracking-widest font-semibold">Client Endorsements</span>
       <h2 class="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-2 mb-14">Loved By Over 8,000+ Patrons</h2>
 
       <div class="grid md:grid-cols-3 gap-6 text-left">
-        <div class="bg-surfaceCard p-6 rounded-xl gold-border">
+        <div class="glass-panel p-6 rounded-2xl">
           <div class="text-brandGold flex gap-1 mb-3 text-xs">
             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
           </div>
@@ -672,7 +793,7 @@
           <span class="text-[10px] text-gray-500">Client of Aryan Mehta</span>
         </div>
 
-        <div class="bg-surfaceCard p-6 rounded-xl gold-border">
+        <div class="glass-panel p-6 rounded-2xl">
           <div class="text-brandGold flex gap-1 mb-3 text-xs">
             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
           </div>
@@ -681,7 +802,7 @@
           <span class="text-[10px] text-gray-500">Client of Maya Patel</span>
         </div>
 
-        <div class="bg-surfaceCard p-6 rounded-xl gold-border">
+        <div class="glass-panel p-6 rounded-2xl">
           <div class="text-brandGold flex gap-1 mb-3 text-xs">
             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
           </div>
@@ -693,9 +814,9 @@
     </div>
   </section>
 
-  <!-- 10. BOOKING MODAL POPUP -->
-  <div id="bookingModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="bg-surfaceCard w-full max-w-lg rounded-2xl gold-border shadow-2xl p-6 sm:p-8 relative">
+  <!-- 12. BOOKING MODAL POPUP -->
+  <div id="bookingModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl hidden items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-lg rounded-3xl shadow-2xl p-6 sm:p-8 relative border-brandGold/40">
       <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -706,7 +827,7 @@
         <p class="text-xs text-gray-400 mt-1">Lock your chosen stylist and time slot instantly.</p>
       </div>
 
-      <div class="bg-surfaceBg p-4 rounded-xl border border-white/5 mb-6 text-xs text-gray-300 space-y-2">
+      <div class="glass-panel p-4 rounded-xl mb-6 text-xs text-gray-300 space-y-2 border-brandGold/20">
         <div class="flex justify-between">
           <span class="text-gray-400">Assigned Stylist:</span>
           <span id="modalStylist" class="font-semibold text-brandGold">Aryan Mehta</span>
@@ -728,20 +849,20 @@
       <form onsubmit="handleFinalBooking(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-gray-300 mb-1">Your Full Name</label>
-          <input type="text" required placeholder="e.g. John Doe" class="w-full bg-darkBg border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+          <input type="text" required placeholder="e.g. John Doe" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
         </div>
         <div>
           <label class="block text-xs font-semibold text-gray-300 mb-1">Mobile Number (For WhatsApp / SMS Confirmation)</label>
-          <input type="tel" required placeholder="+91 98765 43210" class="w-full bg-darkBg border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+          <input type="tel" required placeholder="+91 98765 43210" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
         </div>
 
-        <button type="submit" class="w-full bg-brandGold hover:bg-brandGoldDark text-black font-bold py-3.5 rounded-lg text-sm transition-all shadow-lg shadow-brandGold/15 mt-2">
+        <button type="submit" class="w-full bg-gradient-to-r from-brandGold to-brandGoldDark text-black font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-brandGold/20 mt-2">
           Confirm Appointment Now
         </button>
       </form>
 
       <!-- Success State -->
-      <div id="bookingSuccessBox" class="hidden absolute inset-0 bg-surfaceCard rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+      <div id="bookingSuccessBox" class="hidden absolute inset-0 bg-[#0c0c10]/95 backdrop-blur-2xl rounded-3xl p-8 flex flex-col items-center justify-center text-center">
         <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mb-4 border border-emerald-500/40">
           <i class="fa-solid fa-check"></i>
         </div>
@@ -749,15 +870,15 @@
         <p class="text-xs text-gray-300 max-w-sm mb-6 leading-relaxed">
           Your slot has been allocated to <span id="confirmedStylistName" class="text-brandGold font-semibold">Aryan Mehta</span>. A calendar invite has been sent to your phone.
         </p>
-        <button onclick="closeBookingModal()" class="bg-surfaceBg border border-white/20 text-white hover:border-brandGold px-6 py-2.5 rounded-lg text-xs font-semibold">
+        <button onclick="closeBookingModal()" class="glass-panel text-white hover:border-brandGold px-6 py-2.5 rounded-xl text-xs font-semibold">
           Close Window
         </button>
       </div>
     </div>
   </div>
 
-  <!-- 11. FOOTER -->
-  <footer id="contact" class="border-t border-white/10 bg-black/70 py-12 px-6">
+  <!-- 13. FOOTER -->
+  <footer id="contact" class="border-t border-white/10 bg-black/80 py-12 px-6">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 text-xs text-gray-500">
       <div>
         <p class="font-cinzel text-lg text-white font-bold mb-1">APEX SALON & SPA</p>
@@ -768,7 +889,7 @@
         <a href="#" class="hover:text-brandGold transition-colors"><i class="fa-brands fa-facebook"></i></a>
         <a href="#" class="hover:text-brandGold transition-colors"><i class="fa-brands fa-whatsapp"></i></a>
       </div>
-      <p>&copy; 2026 APEX Salon. Demo Prototype (₹50,000 Pro Stylist Hub Tier).</p>
+      <p>&copy; 2026 APEX Salon. Demo Prototype (₹70,000 Scroll Motion Experience Tier).</p>
     </div>
   </footer>
 
@@ -779,7 +900,21 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    // 1. Before & After Slider
+    // 1. Scroll-Driven Reveal
+    function revealOnScroll() {
+      const reveals = document.querySelectorAll('.reveal');
+      const windowHeight = window.innerHeight;
+      reveals.forEach(el => {
+        const elementTop = el.getBoundingClientRect().top;
+        if (elementTop < windowHeight - 90) {
+          el.classList.add('active');
+        }
+      });
+    }
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+
+    // 2. Before & After Slider
     const baSlider = document.getElementById('baSlider');
     const baOverlay = document.getElementById('baOverlay');
     const baHandle = document.getElementById('baHandle');
@@ -801,26 +936,26 @@
 
     baSlider.addEventListener('touchstart', (e) => { isDragging = true; updateSlider(e.touches[0].clientX); });
     window.addEventListener('touchend', () => { isDragging = false; });
-    window.addEventListener('touchmove', (e) => { if (!isDragging) updateSlider(e.touches[0].clientX); });
+    window.addEventListener('touchmove', (e) => { if (isDragging) updateSlider(e.touches[0].clientX); });
 
-    // 2. Filterable Lookbook Gallery
+    // 3. Filterable Lookbook Gallery
     function filterGallery(category) {
       const items = document.querySelectorAll('.gallery-item');
       const buttons = document.querySelectorAll('.gallery-btn');
 
       buttons.forEach(btn => {
         btn.classList.remove('bg-brandGold', 'text-black');
-        btn.classList.add('bg-surfaceCard', 'text-gray-300');
+        btn.classList.add('glass-panel', 'text-gray-300');
       });
       event.target.classList.add('bg-brandGold', 'text-black');
-      event.target.classList.remove('bg-surfaceCard', 'text-gray-300');
+      event.target.classList.remove('glass-panel', 'text-gray-300');
 
       items.forEach(item => {
         item.style.display = (category === 'all' || item.classList.contains(category)) ? 'block' : 'none';
       });
     }
 
-    // 3. Pro Scheduler State & Logic
+    // 4. Pro Scheduler State & Logic
     let state = {
       stylist: 'Aryan Mehta',
       service: 'Signature Haircut',
